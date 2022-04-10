@@ -18,11 +18,8 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Service service = new Service("Poland");
-        String weatherJson = service.getWeather("Warsaw");
-
         FXMLLoader loader = new FXMLLoader();
-        loader.setControllerFactory(c -> new Controller(service, "Warsaw", "USD"));
+        loader.setControllerFactory(c -> new Controller(new Service("Poland"), "Warsaw", "USD"));
         Parent root = loader.load(new FileInputStream("resources/zad1/fx/GUI.fxml"));
 
         Scene scene = new Scene(root);

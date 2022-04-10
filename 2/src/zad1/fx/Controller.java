@@ -39,12 +39,10 @@ public class Controller {
         WebEngine engine = Wikipedia.getEngine();
         engine.load("https://en.wikipedia.org/wiki/" + city);
         
-        weatherInfo.setText(service.getWeatherObject().getInfo());
+        weatherInfo.setText(service.getWeather(city).getInfo());
 
         currencyRate.setText(String.valueOf(service.getRateFor(currency)));
         NBPRate.setText(String.valueOf(service.getNBPRate()));
-
-        System.out.println("initialized");
     }
     
     @FXML
@@ -59,7 +57,7 @@ public class Controller {
             currency = currencyInput.getText();
 
         service.getWeather(city);
-        weatherInfo.setText(service.getWeatherObject().getInfo());
+        weatherInfo.setText(service.getWeather(city).getInfo());
 
         currencyRate.setText(String.valueOf(service.getRateFor(currency)));
         NBPRate.setText(String.valueOf(service.getNBPRate()));

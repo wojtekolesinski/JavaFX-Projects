@@ -17,7 +17,6 @@ import java.util.*;
 public class Service {
     private final String country;
     private final String localCurrencyCode;
-    private Weather weatherObject;
 
     public Service(String country) {
         this.country = country;
@@ -32,11 +31,8 @@ public class Service {
         return country;
     }
 
-    public Weather getWeatherObject() {
-        return weatherObject;
-    }
 
-    public String getWeather(String city) {
+    public Weather getWeather(String city) {
         String key = "e10ed18f4a2394bca3578c708d321bd4";
         URL url = null;
         try {
@@ -54,8 +50,7 @@ public class Service {
         double pressure = (double) main.get("pressure");
         double humidity = (double) main.get("humidity");
         double wind = (double) ((Map)map.get("wind")).get("speed");
-        this.weatherObject = new Weather(city, sky, temp, pressure, humidity, wind);
-        return weatherObject.toString();
+        return new Weather(city, sky, temp, pressure, humidity, wind);
     }
 
     public Double getRateFor(String currency) {
@@ -70,7 +65,6 @@ public class Service {
         Gson gson = new Gson();
         Map data = gson.fromJson(s, Map.class);
         double rate = (double) ((Map)data.get("rates")).get(localCurrencyCode);
-        System.out.println(rate);
         return rate;
     }
 
@@ -89,7 +83,6 @@ public class Service {
 
     public Double getNBPRate() {
         if (localCurrencyCode.equals("PLN")) {
-            System.out.println(1);
             return 1d;
         }
 
@@ -113,14 +106,11 @@ public class Service {
             if (columns.size() != 3) continue;
 
             String[] data = columns.get(1).text().split(" ");
-            int value = Integer.parseInt(data[0]);
+            int multiplier = Integer.parseInt(data[0]);
             String code = data[1];
             rate = Double.parseDouble(columns.get(2).text().replace(',', '.'));
             if (code.equals(localCurrencyCode)) {
-                System.out.println(value);
-                System.out.println(code);
-                System.out.println(rate);
-                return rate;
+                return rate / multiplier;
             }
         }
         return rate;
