@@ -22,6 +22,7 @@ public class MainServerHandler implements Runnable, Handler{
         this.clientAddress = receivedPacket.getAddress();
         this.clientPort = receivedPacket.getPort();
         var data = parsePacket(receivedPacket);
+        System.out.println(data);
         this.dto = parseRequest(data);
         this.servers = servers;
     }
@@ -49,13 +50,10 @@ public class MainServerHandler implements Runnable, Handler{
 
     public void handleHelloRequest() {
         var request = (LanguageServerHello) dto;
-        System.out.println(new Gson().toJson(request));
         servers.put(request.getLanguage(), new Pair<InetAddress, Integer>(request.getAddress(), request.getPort()));
     }
     public void handleClientRequest() {
         var clientRequest = (ClientRequest) dto;
-
-        System.out.println(new Gson().toJson(clientRequest));
 
         var child = servers.entrySet()
                 .stream()
@@ -82,7 +80,6 @@ public class MainServerHandler implements Runnable, Handler{
 
     public void handleTimeOut() {
         var info = (RequestTimedOut) dto;
-        System.out.println(new Gson().toJson(info));
         servers.remove(info.getLanguage());
     }
 
