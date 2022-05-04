@@ -81,10 +81,10 @@ public class Client {
 
             while (!channel.finishConnect()) {
                 System.out.print("waiting \t " + LocalDateTime.now() + "\r");
-                Thread.sleep(500);
+                Thread.sleep(100);
             }
 
-            int rozmiar_bufora = 1024 * 10;
+            int rozmiar_bufora = 1024;
             channel.write(charset.encode(data + "\n"));
 
             ByteBuffer buffer = ByteBuffer.allocate(rozmiar_bufora);
@@ -105,6 +105,7 @@ public class Client {
                         else
                             stringBuffer.append(c);
                     }
+                    buffer.clear();
                 }
             }
             return stringBuffer.toString();

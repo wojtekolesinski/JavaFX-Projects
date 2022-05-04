@@ -38,7 +38,7 @@ public class Server {
         buffer.clear();
 
         long start = System.currentTimeMillis();
-        int timeout = 1;
+        int timeout = 100;
         readLoop:
         while (true) {
             buffer.clear();
@@ -54,7 +54,7 @@ public class Server {
                         stringBuffer.append(c);
                 }
             }
-            if ((System.currentTimeMillis() - start) / 1000 > timeout) return false;
+            if (System.currentTimeMillis() - start > timeout) return false;
         }
 
 
@@ -91,17 +91,25 @@ public class Server {
         };
 
         String responseJson = gson.toJson(response);
-        System.out.println(responseJson);
-        System.out.println(responseJson.length());
         channel.write(charset.encode(CharBuffer.wrap(responseJson + "\n")));
         return true;
     }
 
     private static Request removeTopics(Request request) {
+        RemoveTopicsRequest removeTopicsRequest = (RemoveTopicsRequest) request;
+        TOPICS.removeAll(removeTopicsRequest.getTopics());
+        ARTICLES.removeAll(
+            ARTICLES.stream()
+                    .filter(article -> removeTopicsRequest.getTopics().contains(article.getTopic()))
+                    .toList()
+        );
         return null;
     }
 
     private static Request addTopics(Request request) {
+        AddTopicsRequest addTopicsRequest = (AddTopicsRequest) request;
+        TOPICS.addAll(addTopicsRequest.getTopics());
+        System.out.println(TOPICS);
         return null;
     }
 
@@ -137,12 +145,7 @@ public class Server {
     }
 
     private static Request getTopics() {
-        List<String> topics = ARTICLES.stream()
-                .map(Article::getTopic)
-                .distinct()
-                .toList();
-
-        return new GetTopicsResponse(topics);
+        return new GetTopicsResponse(TOPICS);
     }
 
     private static Request registerNewUser(Request request) {

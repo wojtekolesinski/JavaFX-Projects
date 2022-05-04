@@ -2,6 +2,9 @@ package server;
 
 import com.google.gson.Gson;
 import models.article.Article;
+import models.article.Topic;
+import models.request.admin.AddTopicsRequest;
+import models.request.admin.RemoveTopicsRequest;
 import models.request.response.GetArticlesResponse;
 import models.request.response.GetTopicsResponse;
 import models.request.response.RegisterUserResponse;
@@ -18,6 +21,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Admin {
@@ -45,10 +49,10 @@ public class Admin {
 
             while (!channel.finishConnect()) {
                 System.out.print("waiting \t " + LocalDateTime.now() + "\r");
-                Thread.sleep(500);
+                Thread.sleep(100);
             }
 
-            int rozmiar_bufora = 1024 * 10;
+            int rozmiar_bufora = 1024;
             channel.write(charset.encode(data + "\n"));
 
             ByteBuffer buffer = ByteBuffer.allocate(rozmiar_bufora);
@@ -69,6 +73,7 @@ public class Admin {
                         else
                             stringBuffer.append(c);
                     }
+                    buffer.clear();
                 }
             }
             return stringBuffer.toString();
@@ -77,5 +82,18 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void updateTopics(List<String> newTopics) {
+        newTopics = new ArrayList<>(newTopics);
+        List<String> oldTopics = getTopics();
+        newTopics.removeAll(oldTopics);
+        AddTopicsRequest request = new AddTopicsRequest(newTopics);
+        sendData(gsonInstance.toJson(request));
+    }
+
+    public void removeTopics(List<String> topics) {
+        RemoveTopicsRequest request = new RemoveTopicsRequest(topics);
+        sendData(gsonInstance.toJson(request));
     }
 }

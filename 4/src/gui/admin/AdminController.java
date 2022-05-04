@@ -1,13 +1,10 @@
-package gui.client;
+package gui.admin;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -16,9 +13,10 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.*;
-import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
 import models.article.Article;
 import models.article.Topic;
+import server.Admin;
 import server.Client;
 
 import java.util.ArrayList;
@@ -26,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClientController {
+public class AdminController {
 
-    public Client client;
+    public Admin admin;
     public List<String> topics;
     @FXML
     public TableView<Topic> topicsTable;
@@ -39,16 +37,18 @@ public class ClientController {
     @FXML
     public TextFlow articlesTextFlow;
     public Button refreshButton;
+    public Button addTopicButton;
 
     public void initialize() {
-        client = new Client();
-        client.registerUser();
+        admin = new Admin();
 
         TableColumn<Topic, String> topicColumn = new TableColumn<>("Topic");
         TableColumn<Topic, BooleanProperty> subscribedColumn = new TableColumn<>("");
 
         topicColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         topicColumn.setMinWidth(86);
+        topicColumn.setCellFactory(p -> new TextFieldTableCell<>(new DefaultStringConverter()));
+        topicColumn.setOnEditCommit(e -> e.getRowValue().setName(e.getNewValue()));
         subscribedColumn.setCellValueFactory(new PropertyValueFactory<>("isSubscribed"));
         subscribedColumn.setCellFactory(p -> new CheckBoxTableCell<>());
         subscribedColumn.setMaxWidth(25);
@@ -62,51 +62,40 @@ public class ClientController {
 
     @FXML
     public void saveSubscriptions(ActionEvent actionEvent) {
-        client.subscribeTopics(
+        admin.updateTopics(
             topicsTable.getItems()
                     .stream()
-                    .filter(Topic::isIsSubscribed )
                     .map(Topic::getName)
+                    .filter(t -> !t.isEmpty())
                     .toList()
         );
-        updateArticles();
-    }
-
-    public void updateArticles() {
-        List<Text> texts = new ArrayList<>();
-        Map<String, List<String>> articles = new HashMap<>();
-        for (Article article: client.getArticles()) {
-            if (!articles.containsKey(article.getTopic())) {
-                articles.put(article.getTopic(), new ArrayList<>());
-            }
-            articles.get(article.getTopic()).add(article.getText());
-        }
-
-        for (Map.Entry<String, List<String>> entry: articles.entrySet()) {
-            Text title = new Text(entry.getKey() + "\n");
-            title.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 24));
-            texts.add(title);
-
-            for (String article: entry.getValue()) {
-                Text text = new Text(article + "\n");
-                text.setFont(Font.font("Helvetica", FontWeight.NORMAL, 16));
-                texts.add(text);
-            }
-            texts.add(new Text("\n"));
-        }
-        articlesTextFlow.getChildren().clear();
-        articlesTextFlow.getChildren().addAll(texts);
-        articlesTextFlow.setLineSpacing(10);
-        articlesTextFlow.setTextAlignment(TextAlignment.JUSTIFY);
     }
 
     public void refresh() {
-        topics = Client.getTopics();
+        topics = Admin.getTopics();
         ObservableList<Topic> data = FXCollections.observableArrayList(
-                topics.stream().map(t -> new Topic(t, client.getUser().getTopics().contains(t))).toList()
+                topics.stream().map(t -> new Topic(t, false)).toList()
         );
         topicsTable.setItems(data);
+    }
 
-        updateArticles();
+    public void addTopic() {
+        topics.add("");
+        ObservableList<Topic> data = FXCollections.observableArrayList(
+                topics.stream().map(t -> new Topic(t, false)).toList()
+        );
+        topicsTable.setItems(data);
+//        refresh();
+    }
+
+    public void removeSelectedTopics() {
+        admin.removeTopics(
+            topicsTable.getItems()
+                .stream()
+                .filter(Topic::isIsSubscribed)
+                .map(Topic::getName)
+                .toList()
+        );
+        refresh();
     }
 }
