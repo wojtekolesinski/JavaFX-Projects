@@ -6,6 +6,7 @@ import models.request.Request;
 import models.request.admin.AddArticlesRequest;
 import models.request.admin.AddTopicsRequest;
 import models.request.admin.RemoveTopicsRequest;
+import models.request.response.EmptyResponse;
 import models.request.response.GetArticlesResponse;
 import models.request.response.GetTopicsResponse;
 import models.request.response.RegisterUserResponse;
@@ -103,18 +104,19 @@ public class Server {
                     .filter(article -> removeTopicsRequest.getTopics().contains(article.getTopic()))
                     .toList()
         );
-        return null;
+        return new EmptyResponse();
     }
 
     private static Request addTopics(Request request) {
         AddTopicsRequest addTopicsRequest = (AddTopicsRequest) request;
         TOPICS.addAll(addTopicsRequest.getTopics());
-        System.out.println(TOPICS);
-        return null;
+        return new EmptyResponse();
     }
 
     private static Request addArticles(Request request) {
-        return null;
+        AddArticlesRequest addArticlesRequest = (AddArticlesRequest) request;
+        ARTICLES.addAll(addArticlesRequest.getArticles());
+        return new EmptyResponse();
     }
 
     private static Request unsubscribeTopics(Request request) {
@@ -129,7 +131,7 @@ public class Server {
                 .orElseThrow(IllegalStateException::new);
         user.getTopics().clear();
         user.getTopics().addAll(subscribeTopicsRequest.getTopics());
-        return null;
+        return new EmptyResponse();
     }
 
     private static Request getArticles(Request request) {
@@ -184,8 +186,6 @@ public class Server {
                 selector.select();
                 Set<SelectionKey> keys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = keys.iterator();
-
-
 
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();

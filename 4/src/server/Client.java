@@ -2,7 +2,6 @@ package server;
 
 import com.google.gson.Gson;
 import models.article.Article;
-import models.request.Request;
 import models.request.response.GetArticlesResponse;
 import models.request.response.GetTopicsResponse;
 import models.request.response.RegisterUserResponse;
@@ -14,15 +13,13 @@ import models.user.User;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+
 
 public class Client {
 

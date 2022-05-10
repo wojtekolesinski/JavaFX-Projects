@@ -5,24 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.text.*;
 import javafx.util.converter.DefaultStringConverter;
 import models.article.Article;
 import models.article.Topic;
 import server.Admin;
-import server.Client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AdminController {
 
@@ -35,9 +27,11 @@ public class AdminController {
     @FXML
     public ScrollPane articlesMainPane;
     @FXML
-    public TextFlow articlesTextFlow;
     public Button refreshButton;
     public Button addTopicButton;
+    public TextArea articleInputTextArea;
+    public ComboBox<String> topicsComboBox;
+    public boolean currentArticleIsSaved = false;
 
     public void initialize() {
         admin = new Admin();
@@ -57,11 +51,10 @@ public class AdminController {
         topicsTable.getColumns().addAll(topicColumn, subscribedColumn);
 
         refresh();
-
     }
 
     @FXML
-    public void saveSubscriptions(ActionEvent actionEvent) {
+    public void save(ActionEvent actionEvent) {
         admin.updateTopics(
             topicsTable.getItems()
                     .stream()
@@ -69,6 +62,11 @@ public class AdminController {
                     .filter(t -> !t.isEmpty())
                     .toList()
         );
+        if (topicsComboBox.getValue() != null) {
+            admin.addArticle(new Article(topicsComboBox.getValue(), articleInputTextArea.getText()));
+            currentArticleIsSaved = true;
+        }
+
     }
 
     public void refresh() {
@@ -77,6 +75,15 @@ public class AdminController {
                 topics.stream().map(t -> new Topic(t, false)).toList()
         );
         topicsTable.setItems(data);
+
+        topicsComboBox.setItems(FXCollections.observableArrayList(topics));
+
+        if (currentArticleIsSaved) {
+            topicsComboBox.setValue(null);
+            articleInputTextArea.setText("");
+            currentArticleIsSaved = false;
+        }
+
     }
 
     public void addTopic() {
@@ -85,7 +92,7 @@ public class AdminController {
                 topics.stream().map(t -> new Topic(t, false)).toList()
         );
         topicsTable.setItems(data);
-//        refresh();
+        refresh();
     }
 
     public void removeSelectedTopics() {

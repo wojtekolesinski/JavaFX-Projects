@@ -17,6 +17,7 @@ public class Request {
     public final static String REGISTER_RESPONSE = "register_r";
     public final static String GET_TOPICS_RESPONSE = "getTopics_r";
     public final static String GET_ARTICLES_RESPONSE = "getArticles_r";
+    public final static String EMPTY_RESPONSE = "empty";
 
     private String header;
 

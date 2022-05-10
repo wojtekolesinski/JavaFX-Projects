@@ -1,22 +1,17 @@
 package gui.client;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.*;
-import javafx.util.Callback;
 import models.article.Article;
 import models.article.Topic;
 import server.Client;
@@ -88,11 +83,11 @@ public class ClientController {
             texts.add(title);
 
             for (String article: entry.getValue()) {
-                Text text = new Text(article + "\n");
+                Text text = new Text(article + "\n\n");
                 text.setFont(Font.font("Helvetica", FontWeight.NORMAL, 16));
                 texts.add(text);
             }
-            texts.add(new Text("\n"));
+            texts.add(new Text("\n\n"));
         }
         articlesTextFlow.getChildren().clear();
         articlesTextFlow.getChildren().addAll(texts);

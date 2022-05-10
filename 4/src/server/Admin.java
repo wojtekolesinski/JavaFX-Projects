@@ -2,17 +2,12 @@ package server;
 
 import com.google.gson.Gson;
 import models.article.Article;
-import models.article.Topic;
+import models.request.admin.AddArticlesRequest;
 import models.request.admin.AddTopicsRequest;
 import models.request.admin.RemoveTopicsRequest;
-import models.request.response.GetArticlesResponse;
 import models.request.response.GetTopicsResponse;
-import models.request.response.RegisterUserResponse;
-import models.request.user.GetArticlesRequest;
 import models.request.user.GetTopicsRequest;
-import models.request.user.RegisterUserRequest;
-import models.request.user.SubscribeTopicsRequest;
-import models.user.User;
+
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -94,6 +89,11 @@ public class Admin {
 
     public void removeTopics(List<String> topics) {
         RemoveTopicsRequest request = new RemoveTopicsRequest(topics);
+        sendData(gsonInstance.toJson(request));
+    }
+
+    public void addArticle(Article article) {
+        AddArticlesRequest request = new AddArticlesRequest(List.of(article));
         sendData(gsonInstance.toJson(request));
     }
 }
