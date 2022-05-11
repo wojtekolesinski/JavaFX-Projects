@@ -65,6 +65,7 @@ public class ClientController {
                     .toList()
         );
         updateArticles();
+        refresh();
     }
 
     public void updateArticles() {

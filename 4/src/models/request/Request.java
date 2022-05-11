@@ -29,7 +29,4 @@ public class Request {
         return header;
     }
 
-    public void setHeader(String header) {
-        this.header = header;
-    }
 }
