@@ -92,7 +92,7 @@ public class AdminController {
                 topics.stream().map(t -> new Topic(t, false)).toList()
         );
         topicsTable.setItems(data);
-        refresh();
+//        refresh();
     }
 
     public void removeSelectedTopics() {

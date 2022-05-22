@@ -92,6 +92,7 @@ public class Server {
         };
 
         String responseJson = gson.toJson(response);
+        System.out.println("\t"+responseJson+"\n");
         channel.write(charset.encode(CharBuffer.wrap(responseJson + "\n")));
         return true;
     }
