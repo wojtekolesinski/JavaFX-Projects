@@ -12,12 +12,12 @@
         <url-pattern>/table</url-pattern>
     </servlet-mapping>
     
-    <servlet>
-        <servlet-name>Form</servlet-name>
-        <servlet-class>com.example.tpo5.servlets.FormServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Form</servlet-name>
-        <url-pattern>/form</url-pattern>
-    </servlet-mapping>
+<!--    <servlet>-->
+<!--        <servlet-name>Form</servlet-name>-->
+<!--        <servlet-class>com.example.tpo5.servlets.FormServlet</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>Form</servlet-name>-->
+<!--        <url-pattern>/form</url-pattern>-->
+<!--    </servlet-mapping>-->
 </web-app>

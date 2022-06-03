@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @WebServlet(name = "db", value = "/db")
 public class DbConnectionServlet extends HttpServlet {
@@ -46,8 +45,6 @@ public class DbConnectionServlet extends HttpServlet {
     }
 
     private List<Car> getCars(String type) {
-        System.out.println(type);
-        log(type);
         List<Car> cars = new ArrayList<>();
         try {
             String sql = """
