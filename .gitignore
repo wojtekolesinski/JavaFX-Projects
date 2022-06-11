@@ -30,3 +30,4 @@ wyklad/
 *.iml
 .idea/
 **/lib/
+target

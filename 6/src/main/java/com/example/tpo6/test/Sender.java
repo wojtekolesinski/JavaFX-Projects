@@ -12,7 +12,7 @@ public class Sender {
         Hashtable environment = new Hashtable(11);
         environment.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         environment.put(Context.PROVIDER_URL, "tcp://localhost:61616");
-        environment.put("topic.queue1", "queue1");
+        environment.put("topic.topic1", "topic1");
 
         Connection connection = null;
         try {
@@ -20,7 +20,7 @@ public class Sender {
             Context context = new InitialContext(environment);
             ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
 
-            String adminDestinationName = args[0];
+            String adminDestinationName = "topic1";
             Destination destination = (Destination) context.lookup(adminDestinationName);
             connection = factory.createConnection();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
