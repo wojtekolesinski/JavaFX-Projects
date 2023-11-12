@@ -63,7 +63,6 @@ public class Controller implements MessageListener {
             receiver.setMessageListener(this);
 
             connection.start();
-            System.out.println("Receiver started");
         } catch (NamingException e) {
             e.printStackTrace();
         } catch (JMSException e) {
@@ -77,13 +76,11 @@ public class Controller implements MessageListener {
         } catch (JMSException e) {
             e.printStackTrace();
         }
-        System.out.println("bye bye");
     }
 
     public void sendMessage() {
         String message = messageInput.getText();
         if (!message.isEmpty()) {
-            System.out.println("Sending message: " + message);
             MessageDto messageDto = new MessageDto(username, message, System.currentTimeMillis());
             try {
                 TextMessage textMessage = session.createTextMessage();
